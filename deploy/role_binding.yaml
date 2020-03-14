@@ -1,0 +1,11 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pocs-operator-sdk
+subjects:
+- kind: ServiceAccount
+  name: pocs-operator-sdk
+roleRef:
+  kind: Role
+  name: pocs-operator-sdk
+  apiGroup: rbac.authorization.k8s.io
