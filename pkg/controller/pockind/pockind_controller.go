@@ -2,10 +2,13 @@ package pockind
 
 import (
 	"context"
+	"fmt"
 
 	pocv1alpha1 "github.com/miguelsorianod/pocs-operator-sdk/pkg/apis/poc/v1alpha1"
+	imagev1 "github.com/openshift/api/image/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -84,6 +87,17 @@ func (r *ReconcilePocKind) Reconcile(request reconcile.Request) (reconcile.Resul
 		}
 		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
+	}
+
+	imageStreamTag := &imagev1.ImageStreamTag{}
+	imageStreamTagName := "example-istag"
+	err = r.client.Get(context.TODO(), types.NamespacedName{Name: "example-istag", Namespace: request.Namespace}, imageStreamTag)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			reqLogger.Info(fmt.Sprintf("ImageStreamTag %s not found. THIS IS EXPECTED BECAUSE WE HAVE NOT CREATED IT", imageStreamTagName))
+		} else {
+			reqLogger.Error(err, "unexpected error")
+		}
 	}
 
 	return reconcile.Result{}, nil
