@@ -1,0 +1,7 @@
+apiVersion: poc.example.com/v1alpha1
+kind: PocKind
+metadata:
+  name: example-pockind
+spec:
+  # Add fields here
+  size: 3
